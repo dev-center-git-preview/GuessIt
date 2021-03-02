@@ -22,6 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
@@ -30,6 +32,7 @@ import com.example.android.guesstheword.databinding.GameFragmentBinding
  * Fragment where the game is played
  */
 class GameFragment : Fragment() {
+    private val viewModel: GameViewModel by activityViewModels()
 
     // The current word
     private var word = ""
@@ -52,7 +55,7 @@ class GameFragment : Fragment() {
                 container,
                 false
         )
-
+        
         resetList()
         nextWord()
 
