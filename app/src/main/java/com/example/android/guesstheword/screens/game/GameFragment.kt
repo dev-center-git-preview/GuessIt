@@ -51,6 +51,7 @@ class GameFragment : Fragment() {
         binding.correctButton.setOnClickListener {
             viewModel.onCorrect()
         }
+
         binding.skipButton.setOnClickListener {
             viewModel.onSkip()
         }
