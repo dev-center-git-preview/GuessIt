@@ -52,9 +52,9 @@ class GameFragment : Fragment() {
         binding.gameViewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newValue ->
-            binding.timerText.text = newValue
-        })
+//        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newValue ->
+//            binding.timerText.text = newValue
+//        })
 
         viewModel.isGameFinished.observe(viewLifecycleOwner, Observer { newValue ->
             if (!newValue) return@Observer
