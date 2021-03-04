@@ -34,11 +34,12 @@ import com.example.android.guesstheword.databinding.GameFragmentBinding
  * Fragment where the game is played
  */
 class GameFragment : Fragment() {
-    private val viewModel: GameViewModel by activityViewModels()
     private lateinit var binding: GameFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        val viewModel:GameViewModel by activityViewModels()
 
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(
@@ -48,13 +49,7 @@ class GameFragment : Fragment() {
                 false
         )
 
-        binding.correctButton.setOnClickListener {
-            viewModel.onCorrect()
-        }
-
-        binding.skipButton.setOnClickListener {
-            viewModel.onSkip()
-        }
+        binding.gameViewModel = viewModel
 
         viewModel.currentTime.observe(viewLifecycleOwner, Observer { newValue ->
             binding.timerText.text = newValue
@@ -78,7 +73,7 @@ class GameFragment : Fragment() {
     }
 
     private fun gameFinished() {
-        val score = viewModel.score.value ?: 0
+        val score = binding.gameViewModel!!.score.value ?: 0
         val action = GameFragmentDirections.actionGameToScore(score)
         this.findNavController().navigate(action)
     }
