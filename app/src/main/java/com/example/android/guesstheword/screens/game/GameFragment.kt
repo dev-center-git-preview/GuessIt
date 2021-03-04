@@ -50,17 +50,10 @@ class GameFragment : Fragment() {
         )
 
         binding.gameViewModel = viewModel
+        binding.lifecycleOwner = this
 
         viewModel.currentTime.observe(viewLifecycleOwner, Observer { newValue ->
             binding.timerText.text = newValue
-        })
-
-        viewModel.word.observe(viewLifecycleOwner, Observer { newValue ->
-            binding.wordIsText.text = newValue.toString()
-        })
-
-        viewModel.score.observe(viewLifecycleOwner, Observer { newValue ->
-            binding.scoreText.text = newValue.toString()
         })
 
         viewModel.isGameFinished.observe(viewLifecycleOwner, Observer { newValue ->
