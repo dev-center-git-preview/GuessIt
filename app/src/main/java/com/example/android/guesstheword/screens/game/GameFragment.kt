@@ -16,11 +16,15 @@
 
 package com.example.android.guesstheword.screens.game
 
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -52,10 +56,6 @@ class GameFragment : Fragment() {
         binding.gameViewModel = viewModel
         binding.lifecycleOwner = this
 
-//        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newValue ->
-//            binding.timerText.text = newValue
-//        })
-
         viewModel.isGameFinished.observe(viewLifecycleOwner, Observer { newValue ->
             if (!newValue) return@Observer
             gameFinished()
@@ -65,14 +65,27 @@ class GameFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("GameFragment", "onDestroy")
+    }
+
     private fun gameFinished() {
         val score = binding.gameViewModel!!.score.value ?: 0
         val action = GameFragmentDirections.actionGameToScore(score)
         this.findNavController().navigate(action)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("GameFragment", "onDestroy")
+    private fun buzz(pattern: LongArray) {
+        val buzzer = activity?.getSystemService<Vibrator>()
+
+        buzzer?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+            } else {
+                //deprecated in API 26
+                buzzer.vibrate(pattern, -1)
+            }
+        }
     }
 }
