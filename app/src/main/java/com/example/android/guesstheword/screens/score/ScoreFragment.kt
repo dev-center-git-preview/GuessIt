@@ -33,7 +33,7 @@ import com.example.android.guesstheword.databinding.ScoreFragmentBinding
  * Fragment where the final score is shown, after the game is over
  */
 class ScoreFragment : Fragment() {
-    private lateinit var viewModel: ScoreViewModel
+    private lateinit var binding: ScoreFragmentBinding
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -42,23 +42,21 @@ class ScoreFragment : Fragment() {
     ): View? {
 
         // Inflate view and obtain an instance of the binding class.
-        val binding: ScoreFragmentBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.score_fragment,
                 container,
                 false
         )
-        val viewModel:ScoreViewModel by activityViewModels {
+
+        val viewModel:ScoreViewModel by activityViewModels()
+        {
             val args = ScoreFragmentArgs.fromBundle(requireArguments())
             ScoreViceModelFactory(args.score)
         }
-        this.viewModel = viewModel
-        viewModel.score.observe(this.viewLifecycleOwner) { newValue ->
-            binding.scoreText.text = newValue.toString()
-        }
-//        // Get args using by navArgs property delegate
-//        val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
-//        binding.scoreText.text = scoreFragmentArgs.score.toString()
+
+        binding.scoreViewModel = viewModel
+        binding.lifecycleOwner = this
         binding.playAgainButton.setOnClickListener { onPlayAgain() }
 
         return binding.root
