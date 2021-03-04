@@ -37,6 +37,14 @@ class GameViewModel : ViewModel() {
     public val isGameFinished: LiveData<Boolean>
         get() = _isGameFinished
 
+    private val _isWordGuessed = MutableLiveData<Boolean>()
+    public  val isWordGuessed: LiveData<Boolean>
+        get() = _isWordGuessed
+
+    private val _isWordSkipped = MutableLiveData<Boolean> ()
+    public val isWordSkipped: LiveData<Boolean>
+        get() = _isWordSkipped
+
     private lateinit var wordList: MutableList<String>
 
     init {
@@ -101,11 +109,13 @@ class GameViewModel : ViewModel() {
     }
 
     fun onSkip() {
+        _isWordSkipped.value = true
         _score.value = (score.value ?: 0) - 1
         nextWord()
     }
 
     fun onCorrect() {
+        _isWordGuessed.value = true
         _score.value = (score.value ?: 0) + 1
         nextWord()
     }

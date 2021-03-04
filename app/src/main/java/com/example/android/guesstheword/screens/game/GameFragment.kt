@@ -58,8 +58,17 @@ class GameFragment : Fragment() {
 
         viewModel.isGameFinished.observe(viewLifecycleOwner, Observer { newValue ->
             if (!newValue) return@Observer
+            buzz(BuzType.GAME_OVER.pattern)
             gameFinished()
             viewModel.resetGameState()
+        })
+
+        viewModel.isWordSkipped.observe(viewLifecycleOwner, Observer { newValue ->
+            if (newValue) buzz(BuzType.COUNTDOWN_PANIC.pattern)
+        })
+
+        viewModel.isWordGuessed.observe(viewLifecycleOwner, Observer { newValue ->
+            if (newValue) buzz(BuzType.CORRECT.pattern)
         })
 
         return binding.root
