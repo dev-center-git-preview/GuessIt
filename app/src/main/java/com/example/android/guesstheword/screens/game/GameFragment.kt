@@ -17,6 +17,7 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +25,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
 
@@ -56,18 +56,35 @@ class GameFragment : Fragment() {
             viewModel.onSkip()
         }
 
+        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newValue ->
+            binding.timerText.text = newValue
+        })
+
         viewModel.word.observe(viewLifecycleOwner, Observer { newValue ->
             binding.wordIsText.text = newValue.toString()
         })
+
         viewModel.score.observe(viewLifecycleOwner, Observer { newValue ->
             binding.scoreText.text = newValue.toString()
+        })
+
+        viewModel.isGameFinished.observe(viewLifecycleOwner, Observer { newValue ->
+            if (!newValue) return@Observer
+            gameFinished()
+            viewModel.resetGameState()
         })
 
         return binding.root
     }
 
     private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
-        findNavController(this).navigate(action)
+        val score = viewModel.score.value ?: 0
+        val action = GameFragmentDirections.actionGameToScore(score)
+        this.findNavController().navigate(action)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("GameFragment", "onDestroy")
     }
 }
